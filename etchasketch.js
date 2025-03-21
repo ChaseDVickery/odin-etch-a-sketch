@@ -52,15 +52,10 @@ function getPenColor() {
 }
 
 function initializeNewSquare() {
-    // squareElem.style
     const square = document.createElement("div");
-    // let squareSize = Math.min(window.innerWidth, window.innerHeight) / 16;
-    // square.style.width = `${squareSize}px`;
-    // square.style.height = `${squareSize}px`;
     let squareSize = 100 / numSquares;
     square.style.width = `${squareSize}%`;
     square.style.height = `100%`;
-    square.style.border = "solid black 1px";
     square.style.backgroundColor = ORIG_SQUARE_COLOR;
 
     // mouseover bubbles, mouseenter does NOT bubble
@@ -100,6 +95,7 @@ function initializeNewBoard(width, height) {
     currBoard.style.alignItems      = "center";
     currBoard.style.width           = `${maxSize}px`;
     currBoard.style.height          = `${maxSize}px`;
+    currBoard.style.border          = "solid black 1px";
 
     for (let i = 0; i < height; i++) {
         currBoard.appendChild(initializeNewRow(width));
