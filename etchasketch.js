@@ -1,10 +1,17 @@
 
 // Declarations
 let currBoard;
+let numSquares = 16;
+let boardPadding = 16;
+
+const PEN_COLOR = "#000000";
 
 // Get board and parts from DOM
 const container = document.querySelector("#container");
 
+function getPenColor() {
+    return PEN_COLOR;
+}
 
 function initializeNewSquare() {
     // squareElem.style
@@ -12,10 +19,16 @@ function initializeNewSquare() {
     // let squareSize = Math.min(window.innerWidth, window.innerHeight) / 16;
     // square.style.width = `${squareSize}px`;
     // square.style.height = `${squareSize}px`;
-    let squareSize = 100 / 16;
+    let squareSize = 100 / numSquares;
     square.style.width = `${squareSize}%`;
     square.style.height = `100%`;
     square.style.border = "solid black 1px";
+
+    // mouseover bubbles, mouseenter does NOT bubble
+    square.addEventListener("mouseover", (e) => {
+        square.style.backgroundColor = getPenColor();
+    });
+
     return square;
 }
 function initializeNewRow(width) {
@@ -39,26 +52,28 @@ function initializeNewBoard(width, height) {
     currBoard = document.createElement("div");    
     // Style board
     let maxDim = Math.min(window.innerWidth, window.innerHeight);
-    // currBoard.style.cssText         = "background-color: blue";
     currBoard.style.display         = "flex";
     currBoard.style.flexDirection   = "column";
     currBoard.style.justifyContent  = "center";
     currBoard.style.alignItems      = "center";
-    currBoard.style.width           = `${maxDim}px`;
-    currBoard.style.height          = `${maxDim}px`;
+    currBoard.style.width           = `${maxDim-(2*boardPadding)}px`;
+    currBoard.style.height          = `${maxDim-(2*boardPadding)}px`;
 
     for (let i = 0; i < height; i++) {
         currBoard.appendChild(initializeNewRow(width));
     }
 
+    // Event Listeners
     window.addEventListener("resize", (e) => {
         let maxDim = Math.min(window.innerWidth, window.innerHeight);
-        currBoard.style.width           = `${maxDim}px`;
-        currBoard.style.height          = `${maxDim}px`;
-    })
+        currBoard.style.width           = `${maxDim-(2*boardPadding)}px`;
+        currBoard.style.height          = `${maxDim-(2*boardPadding)}px`;
+    });
+    // currBoard.addEventListener("hover");
 
     container.appendChild(currBoard);
+    container.style.padding = `${boardPadding}px`;
 }
 
 
-initializeNewBoard(16, 16);
+initializeNewBoard(numSquares, numSquares);
