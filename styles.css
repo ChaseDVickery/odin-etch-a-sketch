@@ -1,0 +1,16 @@
+
+#container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+button {
+    border-radius: 5px;
+    width: 150px;
+    height: 40px;
+}
+
+#button-menu {
+    display: flex;
+}

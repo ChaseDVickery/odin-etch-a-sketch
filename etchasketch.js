@@ -3,11 +3,49 @@
 let currBoard;
 let numSquares = 16;
 let boardPadding = 16;
+let squares = [];
 
+const ORIG_SQUARE_COLOR = "#ffffff";
 const PEN_COLOR = "#000000";
 
 // Get board and parts from DOM
 const container = document.querySelector("#container");
+const resizeButton = document.querySelector("#resize");
+const resetButton = document.querySelector("#reset");
+
+// Utils
+function getMaxBoardSize() {
+    let maxDim = Math.min(window.innerWidth, window.innerHeight);
+    return maxDim-(2*boardPadding)-100;
+}
+
+// Control methods
+function resetSquare(square) {
+    square.style.backgroundColor = ORIG_SQUARE_COLOR;
+}
+function resetAllSquares() {
+    for (const square of squares) {
+        resetSquare(square);
+    }
+}
+function showResizePopup() {
+    let sizeInput = prompt("Pick new size from 1 to 100");
+    let newSize = parseInt(sizeInput);
+    console.log(newSize);
+    if (!Number.isInteger(newSize)) {
+        alert("New size must be an integer");
+        return;
+    }
+    if (newSize < 1 || newSize > 100) {
+        alert("New size must be between 1 and 100");
+        return;
+    }
+    setNewSize(newSize);
+}
+function setNewSize(newSize) {
+    numSquares = newSize;
+    initializeNewBoard(numSquares, numSquares);
+}
 
 function getPenColor() {
     return PEN_COLOR;
@@ -23,11 +61,14 @@ function initializeNewSquare() {
     square.style.width = `${squareSize}%`;
     square.style.height = `100%`;
     square.style.border = "solid black 1px";
+    square.style.backgroundColor = ORIG_SQUARE_COLOR;
 
     // mouseover bubbles, mouseenter does NOT bubble
     square.addEventListener("mouseover", (e) => {
         square.style.backgroundColor = getPenColor();
     });
+
+    squares.push(square);
 
     return square;
 }
@@ -48,16 +89,17 @@ function initializeNewBoard(width, height) {
     if (currBoard) {
         container.removeChild(currBoard);
     }
+    squares = [];
     // Create new board
     currBoard = document.createElement("div");    
     // Style board
-    let maxDim = Math.min(window.innerWidth, window.innerHeight);
+    let maxSize = getMaxBoardSize();
     currBoard.style.display         = "flex";
     currBoard.style.flexDirection   = "column";
     currBoard.style.justifyContent  = "center";
     currBoard.style.alignItems      = "center";
-    currBoard.style.width           = `${maxDim-(2*boardPadding)}px`;
-    currBoard.style.height          = `${maxDim-(2*boardPadding)}px`;
+    currBoard.style.width           = `${maxSize}px`;
+    currBoard.style.height          = `${maxSize}px`;
 
     for (let i = 0; i < height; i++) {
         currBoard.appendChild(initializeNewRow(width));
@@ -65,9 +107,9 @@ function initializeNewBoard(width, height) {
 
     // Event Listeners
     window.addEventListener("resize", (e) => {
-        let maxDim = Math.min(window.innerWidth, window.innerHeight);
-        currBoard.style.width           = `${maxDim-(2*boardPadding)}px`;
-        currBoard.style.height          = `${maxDim-(2*boardPadding)}px`;
+        let maxDim = getMaxBoardSize();
+        currBoard.style.width           = `${maxSize}px`;
+        currBoard.style.height          = `${maxSize}px`;
     });
     // currBoard.addEventListener("hover");
 
@@ -75,5 +117,14 @@ function initializeNewBoard(width, height) {
     container.style.padding = `${boardPadding}px`;
 }
 
+function initializeControlButtons() {
+    resetButton.addEventListener("click", () => {
+        resetAllSquares();
+    });
+    resizeButton.addEventListener("click", () => {
+        showResizePopup();
+    });
+}
 
+initializeControlButtons();
 initializeNewBoard(numSquares, numSquares);
